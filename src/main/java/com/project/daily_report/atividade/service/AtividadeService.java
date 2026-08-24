@@ -6,10 +6,12 @@ import com.project.daily_report.atividade.dto.AtividadeRequest;
 import com.project.daily_report.atividade.dto.AtividadeResponse;
 import com.project.daily_report.atividade.exception.AtividadeNaoEncontradaException;
 import com.project.daily_report.atividade.repository.AtividadeRepository;
+import com.project.daily_report.atividade.specification.AtividadeSpecification;
 import com.project.daily_report.empresa.domain.Empresa;
 import com.project.daily_report.empresa.exception.EmpresaNaoEncontradaException;
 import com.project.daily_report.empresa.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -58,36 +60,22 @@ public class AtividadeService {
         return toResponse(buscarEntidadePorId(id));
     }
 
-    public List<AtividadeResponse> filtrarPorData(LocalDate data) {
-        return atividadeRepository.findByData(data)
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
+    public List<AtividadeResponse> buscarComFiltros(
+            LocalDate data,
+            Long empresaId,
+            String projeto,
+            CategoriaAtividade categoria,
+            LocalDate dataInicial,
+            LocalDate dataFinal) {
 
-    public List<AtividadeResponse> filtrarPorEmpresa(Long empresaId) {
-        return atividadeRepository.findByEmpresaId(empresaId)
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
+        Specification<Atividade> specification = Specification
+                .where(AtividadeSpecification.comData(data))
+                .and(AtividadeSpecification.comEmpresaId(empresaId))
+                .and(AtividadeSpecification.comProjeto(projeto))
+                .and(AtividadeSpecification.comCategoria(categoria))
+                .and(AtividadeSpecification.comPeriodo(dataInicial, dataFinal));
 
-    public List<AtividadeResponse> filtrarPorProjeto(String projeto) {
-        return atividadeRepository.findByProjeto(projeto)
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
-    public List<AtividadeResponse> filtrarPorCategoria(CategoriaAtividade categoria) {
-        return atividadeRepository.findByCategoria(categoria)
-                .stream()
-                .map(this::toResponse)
-                .toList();
-    }
-
-    public List<AtividadeResponse> filtrarPorPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
-        return atividadeRepository.findByDataBetween(dataInicial, dataFinal)
+        return atividadeRepository.findAll(specification)
                 .stream()
                 .map(this::toResponse)
                 .toList();

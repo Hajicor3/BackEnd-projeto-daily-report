@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -120,7 +121,15 @@ public class AtividadeService {
     }
 
     private Integer calcularMinutos(java.time.LocalTime horaInicio, java.time.LocalTime horaFim) {
-        return (int) Duration.between(horaInicio, horaFim).toMinutes();
+        long minutosInicio = horaInicio.toSecondOfDay() / 60;
+        long minutosFim = horaFim.toSecondOfDay() / 60;
+
+        // Se fim < início, adiciona minutos de um dia (24h = 1440 min)
+        if (minutosFim < minutosInicio) {
+            minutosFim += 24 * 60;
+        }
+
+        return (int) (minutosFim - minutosInicio);
     }
 
     private Atividade buscarEntidadePorId(Long id) {

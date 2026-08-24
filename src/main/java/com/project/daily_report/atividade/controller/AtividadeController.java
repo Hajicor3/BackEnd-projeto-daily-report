@@ -1,5 +1,6 @@
 package com.project.daily_report.atividade.controller;
 
+
 import com.project.daily_report.atividade.domain.CategoriaAtividade;
 import com.project.daily_report.atividade.dto.AtividadeRequest;
 import com.project.daily_report.atividade.dto.AtividadeResponse;
@@ -41,23 +42,10 @@ public class AtividadeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal) {
 
-        if (dataInicial != null && dataFinal != null) {
-            return ResponseEntity.ok(atividadeService.filtrarPorPeriodo(dataInicial, dataFinal));
-        }
-        if (data != null) {
-            return ResponseEntity.ok(atividadeService.filtrarPorData(data));
-        }
-        if (empresaId != null) {
-            return ResponseEntity.ok(atividadeService.filtrarPorEmpresa(empresaId));
-        }
-        if (projeto != null) {
-            return ResponseEntity.ok(atividadeService.filtrarPorProjeto(projeto));
-        }
-        if (categoria != null) {
-            return ResponseEntity.ok(atividadeService.filtrarPorCategoria(categoria));
-        }
+        List<AtividadeResponse> atividades = atividadeService.buscarComFiltros(
+                data, empresaId, projeto, categoria, dataInicial, dataFinal);
 
-        return ResponseEntity.ok(atividadeService.listar());
+        return ResponseEntity.ok(atividades);
     }
 
     @PutMapping("/{id}")

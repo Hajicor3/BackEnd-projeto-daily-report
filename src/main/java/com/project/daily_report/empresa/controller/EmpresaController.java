@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/empresas")
+@CrossOrigin(origins = "${FRONT_END_ORIGIN}")
 @RequiredArgsConstructor
 public class EmpresaController {
 

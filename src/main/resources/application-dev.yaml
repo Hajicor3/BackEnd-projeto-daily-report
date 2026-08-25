@@ -21,3 +21,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+FRONT_END_ORIGIN: http://localhost:4200/

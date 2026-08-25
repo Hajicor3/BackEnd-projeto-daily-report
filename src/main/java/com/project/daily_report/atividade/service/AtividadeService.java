@@ -34,6 +34,7 @@ public class AtividadeService {
                 .data(request.data())
                 .titulo(request.titulo())
                 .descricao(request.descricao())
+                .encarregado(request.encarregado())
                 .empresa(empresa)
                 .projeto(request.projeto())
                 .categoria(request.categoria())
@@ -89,6 +90,7 @@ public class AtividadeService {
         atividade.setData(request.data());
         atividade.setTitulo(request.titulo());
         atividade.setDescricao(request.descricao());
+        atividade.setEncarregado(request.encarregado());
         atividade.setEmpresa(empresa);
         atividade.setProjeto(request.projeto());
         atividade.setCategoria(request.categoria());
@@ -136,6 +138,7 @@ public class AtividadeService {
                 atividade.getData(),
                 atividade.getTitulo(),
                 atividade.getDescricao(),
+                atividade.getEncarregado(),
                 atividade.getEmpresa().getId(),
                 atividade.getEmpresa().getNome(),
                 atividade.getProjeto(),

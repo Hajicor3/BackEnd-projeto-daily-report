@@ -17,6 +17,9 @@ public record AtividadeRequest(
 
         String descricao,
 
+        @NotBlank
+        String encarregado,
+
         @NotNull(message = "A empresa é obrigatória")
         Long empresaId,
 

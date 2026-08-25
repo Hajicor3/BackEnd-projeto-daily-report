@@ -32,6 +32,8 @@ public class Atividade {
     @Column(length = 2000)
     private String descricao;
 
+    private String encarregado;
+
     @ManyToOne
     @JoinColumn(name = "empresa_id")
     private Empresa empresa;

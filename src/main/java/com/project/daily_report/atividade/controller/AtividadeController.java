@@ -40,12 +40,13 @@ public class AtividadeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
             @RequestParam(required = false) Long empresaId,
             @RequestParam(required = false) String projeto,
+            @RequestParam(required = false) String encarregado,
             @RequestParam(required = false) CategoriaAtividade categoria,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalTime dataInicial,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalTime dataFinal) {
 
         List<AtividadeResponse> atividades = atividadeService.buscarComFiltros(
-                data, empresaId, projeto, categoria, dataInicial, dataFinal);
+                data, empresaId, projeto, encarregado, categoria, dataInicial, dataFinal);
 
         return ResponseEntity.ok(atividades);
     }

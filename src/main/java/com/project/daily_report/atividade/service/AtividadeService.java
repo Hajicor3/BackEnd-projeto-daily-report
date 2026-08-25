@@ -66,6 +66,7 @@ public class AtividadeService {
             LocalDate data,
             Long empresaId,
             String projeto,
+            String encarregado,
             CategoriaAtividade categoria,
             LocalTime dataInicial,
             LocalTime dataFinal) {
@@ -73,6 +74,7 @@ public class AtividadeService {
         Specification<Atividade> specification = Specification
                 .where(AtividadeSpecification.comData(data))
                 .and(AtividadeSpecification.comEmpresaId(empresaId))
+                .and(AtividadeSpecification.comEncarregado(encarregado))
                 .and(AtividadeSpecification.comProjeto(projeto))
                 .and(AtividadeSpecification.comCategoria(categoria))
                 .and(AtividadeSpecification.comPeriodo(dataInicial, dataFinal));

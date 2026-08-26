@@ -13,6 +13,9 @@ import com.project.daily_report.empresa.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -62,14 +65,16 @@ public class AtividadeService {
         return toResponse(buscarEntidadePorId(id));
     }
 
-    public List<AtividadeResponse> buscarComFiltros(
+    public Page<AtividadeResponse> buscarComFiltros(
             LocalDate data,
             Long empresaId,
             String projeto,
             String encarregado,
             CategoriaAtividade categoria,
             LocalTime dataInicial,
-            LocalTime dataFinal) {
+            LocalTime dataFinal,
+            int pagina,
+            int tamanho) {
 
         Specification<Atividade> specification = Specification
                 .where(AtividadeSpecification.comData(data))
@@ -79,10 +84,10 @@ public class AtividadeService {
                 .and(AtividadeSpecification.comCategoria(categoria))
                 .and(AtividadeSpecification.comPeriodo(dataInicial, dataFinal));
 
-        return atividadeRepository.findAll(specification)
-                .stream()
-                .map(this::toResponse)
-                .toList();
+        Pageable pageable = PageRequest.of(pagina, tamanho);
+
+        return atividadeRepository.findAll(specification, pageable)
+                .map(this::toResponse);
     }
 
     public AtividadeResponse atualizar(Long id, AtividadeRequest request) {

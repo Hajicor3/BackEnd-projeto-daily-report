@@ -7,6 +7,9 @@ import com.project.daily_report.empresa.exception.EmpresaNaoEncontradaException;
 import com.project.daily_report.empresa.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,11 +33,10 @@ public class EmpresaService {
         return toResponse(salva);
     }
 
-    public List<EmpresaResponse> listar() {
-        return empresaRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList();
+    public Page<EmpresaResponse> listar(int pagina, int tamanho) {
+        Pageable pageable = PageRequest.of(pagina, tamanho);
+        return empresaRepository.findAll(pageable)
+                .map(this::toResponse);
     }
 
     public EmpresaResponse buscarPorId(Long id) {

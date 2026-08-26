@@ -11,6 +11,7 @@ public record AtividadeResponse(
         LocalDate data,
         String titulo,
         String descricao,
+        String encarregado,
         Long empresaId,
         String empresaNome,
         String projeto,

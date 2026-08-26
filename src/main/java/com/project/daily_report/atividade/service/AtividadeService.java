@@ -20,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -36,6 +37,7 @@ public class AtividadeService {
                 .data(request.data())
                 .titulo(request.titulo())
                 .descricao(request.descricao())
+                .encarregado(request.encarregado())
                 .empresa(empresa)
                 .projeto(request.projeto())
                 .categoria(request.categoria())
@@ -67,15 +69,17 @@ public class AtividadeService {
             LocalDate data,
             Long empresaId,
             String projeto,
+            String encarregado,
             CategoriaAtividade categoria,
-            LocalDate dataInicial,
-            LocalDate dataFinal,
+            LocalTime dataInicial,
+            LocalTime dataFinal,
             int pagina,
             int tamanho) {
 
         Specification<Atividade> specification = Specification
                 .where(AtividadeSpecification.comData(data))
                 .and(AtividadeSpecification.comEmpresaId(empresaId))
+                .and(AtividadeSpecification.comEncarregado(encarregado))
                 .and(AtividadeSpecification.comProjeto(projeto))
                 .and(AtividadeSpecification.comCategoria(categoria))
                 .and(AtividadeSpecification.comPeriodo(dataInicial, dataFinal));
@@ -93,6 +97,7 @@ public class AtividadeService {
         atividade.setData(request.data());
         atividade.setTitulo(request.titulo());
         atividade.setDescricao(request.descricao());
+        atividade.setEncarregado(request.encarregado());
         atividade.setEmpresa(empresa);
         atividade.setProjeto(request.projeto());
         atividade.setCategoria(request.categoria());
@@ -113,7 +118,15 @@ public class AtividadeService {
     }
 
     private Integer calcularMinutos(java.time.LocalTime horaInicio, java.time.LocalTime horaFim) {
-        return (int) Duration.between(horaInicio, horaFim).toMinutes();
+        long minutosInicio = horaInicio.toSecondOfDay() / 60;
+        long minutosFim = horaFim.toSecondOfDay() / 60;
+
+        // Se fim < início, adiciona minutos de um dia (24h = 1440 min)
+        if (minutosFim < minutosInicio) {
+            minutosFim += 24 * 60;
+        }
+
+        return (int) (minutosFim - minutosInicio);
     }
 
     private Atividade buscarEntidadePorId(Long id) {
@@ -132,6 +145,7 @@ public class AtividadeService {
                 atividade.getData(),
                 atividade.getTitulo(),
                 atividade.getDescricao(),
+                atividade.getEncarregado(),
                 atividade.getEmpresa().getId(),
                 atividade.getEmpresa().getNome(),
                 atividade.getProjeto(),

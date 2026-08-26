@@ -14,10 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/atividades")
+@CrossOrigin(origins = "${FRONT_END_ORIGIN}")
 @RequiredArgsConstructor
 public class AtividadeController {
 
@@ -39,14 +41,15 @@ public class AtividadeController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
             @RequestParam(required = false) Long empresaId,
             @RequestParam(required = false) String projeto,
+            @RequestParam(required = false) String encarregado,
             @RequestParam(required = false) CategoriaAtividade categoria,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataInicial,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFinal,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalTime dataInicial,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalTime dataFinal,
             @RequestParam(defaultValue = "0") int pagina,
             @RequestParam(defaultValue = "10") int tamanho) {
 
         Page<AtividadeResponse> atividades = atividadeService.buscarComFiltros(
-                data, empresaId, projeto, categoria, dataInicial, dataFinal, pagina, tamanho);
+                data, empresaId, projeto, encarregado, categoria, dataInicial, dataFinal, pagina, tamanho);
 
         return ResponseEntity.ok(atividades);
     }

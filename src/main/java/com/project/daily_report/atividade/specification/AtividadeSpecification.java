@@ -5,6 +5,7 @@ import com.project.daily_report.atividade.domain.CategoriaAtividade;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class AtividadeSpecification {
 
@@ -44,12 +45,24 @@ public class AtividadeSpecification {
         };
     }
 
-    public static Specification<Atividade> comPeriodo(LocalDate dataInicial, LocalDate dataFinal) {
+    public static Specification<Atividade> comPeriodo(LocalTime dataInicial, LocalTime dataFinal) {
         return (root, query, criteriaBuilder) -> {
             if (dataInicial == null || dataFinal == null) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.between(root.get("data"), dataInicial, dataFinal);
+            return criteriaBuilder.and(
+                    criteriaBuilder.equal(root.get("horaInicio"), dataInicial),
+                    criteriaBuilder.equal(root.get("horaFim"), dataFinal)
+            );
+        };
+    }
+
+    public static Specification<Atividade> comEncarregado(String encarregado) {
+        return (root, query, criteriaBuilder) -> {
+            if(encarregado == null || encarregado.trim().isBlank()){
+                return criteriaBuilder.conjunction();
+            }
+            return criteriaBuilder.equal(root.get("encarregado"), encarregado);
         };
     }
 }

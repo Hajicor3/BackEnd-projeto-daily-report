@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -26,8 +27,10 @@ public class EmpresaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EmpresaResponse>> listar() {
-        return ResponseEntity.ok(empresaService.listar());
+    public ResponseEntity<Page<EmpresaResponse>> listar(
+            @RequestParam(defaultValue = "0") int pagina,
+            @RequestParam(defaultValue = "10") int tamanho) {
+        return ResponseEntity.ok(empresaService.listar(pagina, tamanho));
     }
 
     @GetMapping("/{id}")

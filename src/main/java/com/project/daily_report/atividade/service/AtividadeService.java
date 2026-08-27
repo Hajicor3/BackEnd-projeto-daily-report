@@ -11,13 +11,12 @@ import com.project.daily_report.empresa.domain.Empresa;
 import com.project.daily_report.empresa.exception.EmpresaNaoEncontradaException;
 import com.project.daily_report.empresa.repository.EmpresaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -33,6 +32,11 @@ public class AtividadeService {
     public AtividadeResponse criar(AtividadeRequest request) {
         Empresa empresa = buscarEmpresa(request.empresaId());
 
+        Integer minutosTrabalhados = null;
+        if (request.horaInicio() != null && request.horaFim() != null) {
+            minutosTrabalhados = calcularMinutos(request.horaInicio(), request.horaFim());
+        }
+
         Atividade atividade = Atividade.builder()
                 .data(request.data())
                 .titulo(request.titulo())
@@ -43,7 +47,7 @@ public class AtividadeService {
                 .categoria(request.categoria())
                 .horaInicio(request.horaInicio())
                 .horaFim(request.horaFim())
-                .minutosTrabalhados(calcularMinutos(request.horaInicio(), request.horaFim()))
+                .minutosTrabalhados(minutosTrabalhados)
                 .observacao(request.observacao())
                 .criadoEm(LocalDateTime.now())
                 .atualizadoEm(LocalDateTime.now())
@@ -94,6 +98,11 @@ public class AtividadeService {
         Atividade atividade = buscarEntidadePorId(id);
         Empresa empresa = buscarEmpresa(request.empresaId());
 
+        Integer minutosTrabalhados = null;
+        if (request.horaInicio() != null && request.horaFim() != null) {
+            minutosTrabalhados = calcularMinutos(request.horaInicio(), request.horaFim());
+        }
+
         atividade.setData(request.data());
         atividade.setTitulo(request.titulo());
         atividade.setDescricao(request.descricao());
@@ -103,7 +112,7 @@ public class AtividadeService {
         atividade.setCategoria(request.categoria());
         atividade.setHoraInicio(request.horaInicio());
         atividade.setHoraFim(request.horaFim());
-        atividade.setMinutosTrabalhados(calcularMinutos(request.horaInicio(), request.horaFim()));
+        atividade.setMinutosTrabalhados(minutosTrabalhados);
         atividade.setObservacao(request.observacao());
         atividade.setAtualizadoEm(LocalDateTime.now());
 
@@ -117,7 +126,7 @@ public class AtividadeService {
         atividadeRepository.delete(atividade);
     }
 
-    private Integer calcularMinutos(java.time.LocalTime horaInicio, java.time.LocalTime horaFim) {
+    private Integer calcularMinutos(LocalTime horaInicio, LocalTime horaFim) {
         long minutosInicio = horaInicio.toSecondOfDay() / 60;
         long minutosFim = horaFim.toSecondOfDay() / 60;
 

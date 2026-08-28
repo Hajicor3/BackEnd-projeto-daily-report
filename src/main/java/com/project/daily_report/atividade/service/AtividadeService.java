@@ -32,7 +32,7 @@ public class AtividadeService {
     public AtividadeResponse criar(AtividadeRequest request) {
         Empresa empresa = buscarEmpresa(request.empresaId());
 
-        Integer minutosTrabalhados = null;
+        Integer minutosTrabalhados = 0;
         if (request.horaInicio() != null && request.horaFim() != null) {
             minutosTrabalhados = calcularMinutos(request.horaInicio(), request.horaFim());
         }
@@ -98,7 +98,7 @@ public class AtividadeService {
         Atividade atividade = buscarEntidadePorId(id);
         Empresa empresa = buscarEmpresa(request.empresaId());
 
-        Integer minutosTrabalhados = null;
+        Integer minutosTrabalhados = 0;
         if (request.horaInicio() != null && request.horaFim() != null) {
             minutosTrabalhados = calcularMinutos(request.horaInicio(), request.horaFim());
         }

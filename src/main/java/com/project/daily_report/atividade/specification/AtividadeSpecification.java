@@ -59,10 +59,12 @@ public class AtividadeSpecification {
 
     public static Specification<Atividade> comEncarregado(String encarregado) {
         return (root, query, criteriaBuilder) -> {
-            if(encarregado == null || encarregado.trim().isBlank()){
+            if (encarregado == null || encarregado.isBlank()) {
                 return criteriaBuilder.conjunction();
             }
-            return criteriaBuilder.equal(root.get("encarregado"), encarregado);
+            return criteriaBuilder.like(
+                    criteriaBuilder.lower(root.get("encarregado")),
+                    "%" + encarregado.toLowerCase() + "%");
         };
     }
 }

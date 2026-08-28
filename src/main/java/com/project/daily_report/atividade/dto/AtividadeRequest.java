@@ -28,10 +28,8 @@ public record AtividadeRequest(
         @NotNull(message = "A categoria é obrigatória")
         CategoriaAtividade categoria,
 
-        @NotNull(message = "A hora inicial é obrigatória")
         LocalTime horaInicio,
 
-        @NotNull(message = "A hora final é obrigatória")
         LocalTime horaFim,
 
         String observacao
